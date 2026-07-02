@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gamba-stats-bot"
+version = "0.1.0"
+authors = [
+    {name = "Niko Typpö"},
+]
+description = "Telegram bot that tracks slot machine statistics."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+requires-python = ">=3.13"
+dependencies = [
+    "python-telegram-bot>=22.8",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.20",
+]
