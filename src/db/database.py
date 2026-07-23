@@ -6,8 +6,7 @@ from typing import Optional
 
 from telegram.ext import Application
 
-from config import Config
-
+from src.config import Config
 
 _conn_pool: Optional[asyncpg.Pool] = None
 
@@ -51,11 +50,7 @@ async def get_postgres() -> asyncpg.Pool:
     if not _conn_pool:
         logger.error("Connection pool is not initialized.")
         raise ConnectionError("PostgreSQL connection pool is not initialized.")
-    try:
-        return _conn_pool
-    except Exception as e:
-        logger.error(f"Failed to return PostgreSQL connection pool: {e}")
-        raise
+    return _conn_pool
 
 
 async def close_postgres(application: Application) -> None:
@@ -64,6 +59,7 @@ async def close_postgres(application: Application) -> None:
         try:
             logger.info("Closing PostgreSQL connection pool...")
             await _conn_pool.close()
+            _conn_pool = None
             logger.info("PostgreSQL connection pool closed successfully.")
         except Exception as e:
             logger.error(f"Error closing PostgreSQL connection pool: {e}")
