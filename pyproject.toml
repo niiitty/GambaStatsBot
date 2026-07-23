@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 packages =  ["src"]
 
 [project]
-name = "gamba-stats-bot"
+name = "GambaStatsBot"
 version = "0.1.0"
 authors = [
     {name = "Niko Typpö"},
@@ -17,10 +17,25 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.13"
 dependencies = [
+    "asyncpg>=0.31.0",
+    "asyncpg-stubs>=0.31.3",
+    "loguru>=0.7.3",
+    "python-dotenv>=1.2.2",
     "python-telegram-bot>=22.8",
 ]
 
 [dependency-groups]
 dev = [
+  {include-group = "lint"},
+  {include-group = "test"},
+  {include-group = "typing"},
+]
+lint = [
     "ruff>=0.15.20",
+]
+test = [
+    "pytest>=9.1.1",
+]
+typing = [
+    "mypy>=2.3.0",
 ]
