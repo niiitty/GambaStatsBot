@@ -13,6 +13,5 @@ class Config:
     def get_env(cls):
         load_dotenv()
         return cls(
-            database_url=os.environ["DATABASE_URL"],
-            bot_token=os.environ["BOT_TOKEN"]
+            database_url=os.environ["DATABASE_URL"], bot_token=os.environ["BOT_TOKEN"]
         )
