@@ -66,3 +66,17 @@ async def close_postgres(application: Application) -> None:
             raise
     else:
         logger.warning("PostgreSQL connection pool was not initialized.")
+
+
+async def execute(sql: str, *args):
+    db_pool = await get_postgres()
+    async with db_pool.acquire() as conn:
+        async with conn.transaction():
+            await conn.execute(sql, *args)
+
+
+async def query(sql: str, *args):
+    db_pool = await get_postgres()
+    async with db_pool.acquire() as conn:
+        async with conn.transaction():
+            return await conn.fetchrow(sql, *args)

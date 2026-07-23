@@ -1,3 +1,5 @@
+from src.db import add_loss, add_win
+
 _SLOT_MACHINE_WIN_VALUES = {
     1: ("bar", "bar", "bar"),
     22: ("grape", "grape", "grape"),
@@ -6,21 +8,21 @@ _SLOT_MACHINE_WIN_VALUES = {
 }
 
 
-def _is_win(roll_value: int) -> bool:
-    """Check if roll is winning."""
-    return roll_value in _SLOT_MACHINE_WIN_VALUES
+def _is_win(spin_value: int) -> bool:
+    """Check if spin is winning."""
+    return spin_value in _SLOT_MACHINE_WIN_VALUES
 
 
-def _handle_win() -> None:
-    print("WIN!!!")
+async def _handle_win(user_id: int, chat_id: int) -> None:
+    await add_win(user_id, chat_id)
 
 
-def _handle_loss() -> None:
-    print("LOSS :(")
+async def _handle_loss(user_id: int, chat_id: int) -> None:
+    await add_loss(user_id, chat_id)
 
 
-def handle_result(roll_value) -> None:
-    if _is_win(roll_value):
-        _handle_win()
+async def handle_result(spin_value: int, user_id: int, chat_id: int) -> None:
+    if _is_win(spin_value):
+        await _handle_win(user_id, chat_id)
     else:
-        _handle_loss()
+        await _handle_loss(user_id, chat_id)
