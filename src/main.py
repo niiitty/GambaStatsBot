@@ -10,8 +10,9 @@ from telegram.ext import (
 )
 
 from src.config import Config
-from src.db import init_postgres, close_postgres, add_user, get_stats
+from src.db import init_postgres, close_postgres
 from src.slotmachine import handle_result
+from src.commands import help, begin, stats
 
 
 logging.basicConfig(
@@ -28,55 +29,6 @@ async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     chat_id = chat.id
 
     await handle_result(message.dice.value, user_id, chat_id)
-
-
-async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message = update.effective_message
-    if message is None:
-        return
-
-    await message.reply_text(
-        """
-    Käyttöohjeet:
-
-    /help - Tulosta tämä viesti
-    
-    /begin - Ala seuraamaan voittoja ja häviöitä
-    /stats - Tulosta tilastosi
-    """
-    )
-
-
-async def begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-
-    user_id = user.id
-    chat_id = chat.id
-
-    await add_user(user_id, chat_id)
-    await message.reply_text("_Tervetuloa pelaamaan..._", parse_mode="markdown")
-
-
-async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-
-    user_id = user.id
-    chat_id = chat.id
-
-    wins, losses = await get_stats(user_id, chat_id)
-    await message.reply_text(
-        f"""
-        *{user.username}* tilastot:
-        
-        Voitot: {wins}
-        Häviöt: {losses}
-        """,
-        parse_mode="markdown",
-    )
 
 
 def main() -> None:
