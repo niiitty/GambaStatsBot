@@ -1,34 +1,21 @@
 import logging
 
-from telegram import Update
 from telegram.ext import (
     filters,
     ApplicationBuilder,
-    ContextTypes,
     MessageHandler,
     CommandHandler,
 )
 
 from src.config import Config
 from src.db import init_postgres, close_postgres
-from src.slotmachine import handle_result
+from src.slotmachine import check_spin
 from src.commands import help, begin, stats
 
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
-
-
-async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-
-    user_id = user.id
-    chat_id = chat.id
-
-    await handle_result(message.dice.value, user_id, chat_id)
 
 
 def main() -> None:
