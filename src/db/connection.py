@@ -75,7 +75,14 @@ async def execute(sql: str, *args):
             await conn.execute(sql, *args)
 
 
-async def query(sql: str, *args):
+async def insert(sql: str, *args) -> list[asyncpg.Record]:
+    db_pool = await get_postgres()
+    async with db_pool.acquire() as conn:
+        async with conn.transaction():
+            return await conn.fetch(sql, *args)
+
+
+async def query(sql: str, *args) -> asyncpg.Record | None:
     db_pool = await get_postgres()
     async with db_pool.acquire() as conn:
         async with conn.transaction():

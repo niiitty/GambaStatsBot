@@ -1,3 +1,5 @@
+"""`Config` class to load environment variables."""
+
 import os
 from dataclasses import dataclass
 

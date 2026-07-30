@@ -1,5 +1,6 @@
 """Handlers and logic for the slot machine."""
 
+from loguru import logger
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -17,6 +18,9 @@ async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     message = update.effective_message
     user = update.effective_user
     chat = update.effective_chat
+    if message is None or message.dice is None or user is None or chat is None:
+        logger.warning("Message, user, or chat missing for check_spin, ignoring.")
+        return
 
     user_id = user.id
     chat_id = chat.id
