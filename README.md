@@ -6,7 +6,7 @@ A Telegram bot to keep track of wins/losses on slot machine spins.
 ## Setup
 
 Requires
-- Python 3.12+
+- Python 3.13+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ### For local deployment
