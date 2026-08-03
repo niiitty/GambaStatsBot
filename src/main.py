@@ -29,7 +29,9 @@ def main() -> None:
         .build()
     )
 
-    slot_machine_handler = MessageHandler(filters.Dice.SLOT_MACHINE, check_spin)
+    slot_machine_handler = MessageHandler(
+        filters.Dice.SLOT_MACHINE & (~filters.FORWARDED), check_spin
+    )
     application.add_handler(slot_machine_handler)
 
     application.add_handler(CommandHandler("help", help))
