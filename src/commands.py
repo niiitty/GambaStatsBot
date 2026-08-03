@@ -14,13 +14,13 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     await message.reply_text(
-        """
+        r"""
 🎰 Komennot:
 
-/help \\- Tulosta tämä viesti\\.
+/help \- Tulosta tämä viesti\.
 
-/begin \\- Ala seuraamaan voittoja ja häviöitä\\.
-/stats \\- Tulosta tilastosi\\.
+/begin \- Ala seuraamaan voittoja ja häviöitä\.
+/stats \- Tulosta tilastosi\.
         """,
         parse_mode="MarkdownV2",
     )
@@ -39,12 +39,10 @@ async def begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     response = await add_user(user_id, chat_id)
     if response:
-        await message.reply_text(
-            "🎰 _Gamba gamba_", parse_mode="MarkdownV2"
-        )
+        await message.reply_text("🎰 _Gamba gamba_", parse_mode="MarkdownV2")
     else:
         await message.reply_text(
-            "🎰 _Pyöräytyksesi lasketaan jo\\._", parse_mode="MarkdownV2"
+            r"🎰 _Pyöräytyksesi lasketaan jo\._", parse_mode="MarkdownV2"
         )
 
 
@@ -53,7 +51,7 @@ def _win_percentage(wins: int, losses: int) -> str:
         return "N/A"
 
     perc = str(round(wins / (wins + losses), 2))
-    return perc.replace(".", "\\.")
+    return perc.replace(".", r"\.")
 
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -71,19 +69,18 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if stats:
         wins, losses = stats
         await message.reply_text(
-            f"""
+            rf"""
 🎰*{user.username}* tilastot ryhmässä {chat.title}:
 
 🏆 Voitot: {wins}
 💸 Häviöt: {losses}
 
-🍒 Voitto\\-%: {_win_percentage(wins, losses)} %
+🍒 Voitto\-%: {_win_percentage(wins, losses)} %
             """,
             parse_mode="MarkdownV2",
         )
     else:
         await message.reply_text(
-            """
-            🎰 _Seuraa ensin pyöräytyksiä komennolla `\\begin`._
-            """
+            r"🎰 _Seuraa ensin pyöräytyksiä komennolla \/begin\._",
+            parse_mode="MarkdownV2",
         )
