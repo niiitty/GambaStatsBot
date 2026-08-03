@@ -15,10 +15,13 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv sync --group test --group lint
+        run: uv sync --dev
 
       - name: Run unit tests
         run: uv run pytest --cov --cov-branch --cov-report=xml
 
       - name: Run Ruff
         run: uv run ruff check --output-format=github .
+
+      - name: Run type check
+        run: uv run ty check src/
