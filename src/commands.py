@@ -15,13 +15,13 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     await message.reply_text(
         """
-    🎰 Komennot:
+🎰 Komennot:
 
-    /help \\- Tulosta tämä viesti
+/help \\- Tulosta tämä viesti\\.
 
-    /begin \\- Ala seuraamaan voittoja ja häviöitä\\. Tämän jälkeen botti laskee kaikki pyöräytykset\\.
-    /stats \\- Tulosta tilastosi
-    """,
+/begin \\- Ala seuraamaan voittoja ja häviöitä\\.
+/stats \\- Tulosta tilastosi\\.
+        """,
         parse_mode="MarkdownV2",
     )
 
@@ -40,7 +40,7 @@ async def begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     response = await add_user(user_id, chat_id)
     if response:
         await message.reply_text(
-            "🎰 _Lisäät kolikon\\.\\.\\._", parse_mode="MarkdownV2"
+            "🎰 _Gamba gamba_", parse_mode="MarkdownV2"
         )
     else:
         await message.reply_text(
@@ -72,13 +72,12 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         wins, losses = stats
         await message.reply_text(
             f"""
-            🎰**{user.username}** tilastot ryhmässä {chat.title}:
+🎰*{user.username}* tilastot ryhmässä {chat.title}:
 
-            🏆 Voitot: {wins}
+🏆 Voitot: {wins}
+💸 Häviöt: {losses}
 
-            💸 Häviöt: {losses}
-
-            🍒 Voitto\\-%: {_win_percentage(wins, losses)} %
+🍒 Voitto\\-%: {_win_percentage(wins, losses)} %
             """,
             parse_mode="MarkdownV2",
         )
