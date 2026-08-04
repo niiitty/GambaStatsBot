@@ -22,7 +22,7 @@ STATS_TEMPLATE = """
 🍒 Voitto-%: {win_percentage} %
 """
 
-NO_STATS_YET = "🎰 <i>Seuraa ensin pyöräytyksiä komennolla /begin.</i>"
+NO_STATS_YET = "🎰 <i>Seuraa ensin pyöräytyksiä komennolla /begin</i>"
 
 
 def stats_message(username: str, chat_title: str, wins: int, losses: int) -> str:
@@ -39,4 +39,4 @@ def _win_percentage(wins: int, losses: int) -> str:
     if wins + losses <= 0:
         return "N/A"
 
-    return str(round(wins / (wins + losses) * 100, ndigits=4))
+    return str(round(wins / (wins + losses) * 100, ndigits=3))
