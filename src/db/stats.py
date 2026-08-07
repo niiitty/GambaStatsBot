@@ -23,10 +23,12 @@ async def add_user(user_id: int, chat_id: int) -> bool:
     return bool(result)
 
 
-async def add_win(user_id: int, chat_id: int) -> None:
+async def add_win(user_id: int, chat_id: int):
     sql = """
         UPDATE stats
-        SET wins = wins + 1
+        SET wins = wins + 1,
+            longest_streak = GREATEST(longest_streak,current_streak),
+            current_streak = 0
         WHERE user_id = $1 AND chat_id = $2
     """
 
@@ -36,7 +38,7 @@ async def add_win(user_id: int, chat_id: int) -> None:
 async def add_loss(user_id: int, chat_id: int) -> None:
     sql = """
         UPDATE stats
-        SET losses = losses + 1
+        SET losses = losses + 1, current_streak = current_streak + 1
         WHERE user_id = $1 AND chat_id = $2
     """
 
