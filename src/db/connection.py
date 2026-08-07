@@ -34,6 +34,8 @@ async def init_postgres(application: Application) -> None:
                 chat_id BIGINT NOT NULL,
                 wins INTEGER NOT NULL DEFAULT 0,
                 losses INTEGER NOT NULL DEFAULT 0,
+                current_streak INTEGER NOT NULL DEFAULT 0,
+                longest_streak INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (user_id, chat_id)
             );
             """
@@ -72,7 +74,7 @@ async def execute(sql: str, *args):
     db_pool = await get_postgres()
     async with db_pool.acquire() as conn:
         async with conn.transaction():
-            await conn.execute(sql, *args)
+            return await conn.execute(sql, *args)
 
 
 async def insert(sql: str, *args) -> list[asyncpg.Record]:
