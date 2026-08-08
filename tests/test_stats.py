@@ -33,7 +33,7 @@ async def test_add_win_executes_update_statement(mocker):
 
 @pytest.mark.asyncio
 async def test_add_loss_executes_update_statement(mocker):
-    execute_mock = mocker.patch("src.db.stats.execute", new_callable=mocker.AsyncMock)
+    execute_mock = mocker.patch("src.db.stats.insert", new_callable=mocker.AsyncMock)
 
     await stats.add_loss(5, 6)
 
