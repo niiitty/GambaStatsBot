@@ -178,6 +178,21 @@ async def test_execute(mocker, fake_pool, fake_conn):
 
 
 @pytest.mark.asyncio
+async def test_insert(mocker, fake_pool, fake_conn):
+    get_postgres_mock = mocker.patch(
+        "src.db.connection.get_postgres",
+        new_callable=mocker.AsyncMock,
+        return_value=fake_pool,
+    )
+
+    await connection.insert("UPDATE stats SET wins = wins + 1", 1, 2)
+
+    get_postgres_mock.assert_awaited_once()
+    fake_pool.acquire.assert_called_once()
+    fake_conn.fetchrow.assert_awaited_once_with("UPDATE stats SET wins = wins + 1", 1, 2)
+
+
+@pytest.mark.asyncio
 async def test_query(mocker, fake_pool, fake_conn):
     get_postgres_mock = mocker.patch(
         "src.db.connection.get_postgres",
@@ -188,7 +203,7 @@ async def test_query(mocker, fake_pool, fake_conn):
 
     result = await connection.query("SELECT wins, losses FROM stats", 3, 4)
 
-    assert result == (7, 8)
     get_postgres_mock.assert_awaited_once()
     fake_pool.acquire.assert_called_once()
     fake_conn.fetchrow.assert_awaited_once_with("SELECT wins, losses FROM stats", 3, 4)
+    assert result == (7, 8)

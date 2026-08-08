@@ -61,9 +61,15 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     stats = await get_stats(user_id, chat_id)
     if stats:
-        wins, losses = stats
+        wins, losses, longest_streak = stats
         await message.reply_text(
-            text=stats_message(user.username, chat.title, wins, losses),
+            text=stats_message(
+                username=user.username,
+                chat_title=chat.title,
+                wins=wins,
+                losses=losses,
+                longest_streak=longest_streak,
+            ),
             parse_mode=ParseMode.HTML,
         )
     else:
