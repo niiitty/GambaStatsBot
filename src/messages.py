@@ -20,18 +20,26 @@ STATS_TEMPLATE = """
 💸 Häviöt: {losses}
 
 🍒 Voitto-%: {win_percentage} %
+📉 Pisin häviöputki: {longest_streak}
 """
 
 NO_STATS_YET = "🎰 <i>Seuraa ensin pyöräytyksiä komennolla /begin</i>"
 
+LOSS_STREAK_TEMPLATE = (
+    "🎰 <i><b>{username}</b> on {current_streak} pelin häviöputkessa</i> 📉"
+)
 
-def stats_message(username: str, chat_title: str, wins: int, losses: int) -> str:
+
+def stats_message(
+    username: str, chat_title: str, wins: int, losses: int, longest_streak: int
+) -> str:
     return STATS_TEMPLATE.format(
         username=escape(username),
         chat_title=escape(chat_title),
         wins=wins,
         losses=losses,
         win_percentage=escape(f"{_win_percentage(wins, losses)}"),
+        longest_streak=longest_streak,
     )
 
 
@@ -40,3 +48,10 @@ def _win_percentage(wins: int, losses: int) -> str:
         return "N/A"
 
     return str(round(wins / (wins + losses) * 100, ndigits=3))
+
+
+def loss_streak_message(username: str, current_streak: int) -> str:
+    return LOSS_STREAK_TEMPLATE.format(
+        username=escape(username),
+        current_streak=current_streak,
+    )
