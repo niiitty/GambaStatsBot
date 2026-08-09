@@ -20,7 +20,7 @@ def make_update(mocker, mock_bot):
 
     def _make_update(*, dice_value=2, user_id=123, username="testuser", chat_id=456):
         mock_user = mocker.Mock(id=user_id)
-        mock_user.name = username
+        mock_user.username = username
 
         update = mocker.Mock(spec=Update)
         update.effective_message = mocker.Mock(dice=mocker.Mock(value=dice_value))
