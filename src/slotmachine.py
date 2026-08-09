@@ -34,13 +34,10 @@ async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         logger.warning("Message, user, or chat missing for check_spin, ignoring.")
         return
 
-    user_id = user.id
-    chat_id = chat.id
-
     result: SpinResult = await handle_result(
         spin_value=message.dice.value,
-        user_id=user_id,
-        chat_id=chat_id,
+        user_id=user.id,
+        chat_id=chat.id,
         username=user.name,
     )
 
@@ -49,7 +46,7 @@ async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             logger.warning("Message is None in losing spin.")
             return
         await bot.send_message(
-            chat_id=chat_id,
+            chat_id=chat.id,
             text=result.message,
             parse_mode=ParseMode.HTML,
         )

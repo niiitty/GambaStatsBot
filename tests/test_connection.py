@@ -189,7 +189,9 @@ async def test_insert(mocker, fake_pool, fake_conn):
 
     get_postgres_mock.assert_awaited_once()
     fake_pool.acquire.assert_called_once()
-    fake_conn.fetchrow.assert_awaited_once_with("UPDATE stats SET wins = wins + 1", 1, 2)
+    fake_conn.fetchrow.assert_awaited_once_with(
+        "UPDATE stats SET wins = wins + 1", 1, 2
+    )
 
 
 @pytest.mark.asyncio
