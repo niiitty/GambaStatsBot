@@ -1,5 +1,6 @@
-import pytest
 import asyncpg
+import pytest
+
 from src.db import connection
 
 
@@ -41,7 +42,7 @@ async def test_init_postgres_creates_pool(mocker, fake_pool):
         return_value=mocker.Mock(database_url="postgres://test"),
     )
 
-    await connection.init_postgres(application=mocker.Mock())
+    await connection.init_postgres(mocker.Mock())
 
     create_pool_mock.assert_awaited_once_with(
         dsn="postgres://test", min_size=1, max_size=10
@@ -59,8 +60,8 @@ async def test_init_postgres_logs_exception_on_initialization(mocker):
         return_value=mocker.Mock(database_url="postgres://test"),
     )
 
-    with pytest.raises(Exception):
-        await connection.init_postgres(application=mocker.Mock())
+    with pytest.raises(expected_exception=Exception, match=r"boom"):
+        await connection.init_postgres(mocker.Mock())
 
     error_mock.assert_called_once()
     assert connection._conn_pool is None
@@ -79,7 +80,7 @@ async def test_init_postgres_creates_stats_table(mocker, fake_pool, fake_conn):
         return_value=mocker.Mock(database_url="postgres://fake"),
     )
 
-    await connection.init_postgres(application=mocker.Mock())
+    await connection.init_postgres(mocker.Mock())
 
     fake_conn.execute.assert_awaited_once()
     executed_sql = fake_conn.execute.call_args[0][0]
@@ -102,8 +103,8 @@ async def test_init_postgres_logs_exception_on_creating_stats_table(
     fake_pool.acquire.return_value.__aenter__.side_effect = Exception("boom")
     error_mock = mocker.patch("src.db.connection.logger.error")
 
-    with pytest.raises(Exception):
-        await connection.init_postgres(application=mocker.Mock())
+    with pytest.raises(expected_exception=Exception, match=r"boom"):
+        await connection.init_postgres(mocker.Mock())
 
     error_mock.assert_called_once()
     assert "Error creating stats table: boom" in error_mock.call_args.args[0]
@@ -131,7 +132,7 @@ async def test_get_postgres_returns_conn_pool_when_initialized(fake_pool):
 async def test_close_postgres_closes(mocker, fake_pool):
     connection._conn_pool = fake_pool
 
-    await connection.close_postgres(application=mocker.Mock())
+    await connection.close_postgres(mocker.Mock())
 
     fake_pool.close.assert_awaited_once()
     assert connection._conn_pool is None
@@ -143,8 +144,8 @@ async def test_close_postgres_raises_and_logs_on_error(mocker, fake_pool):
     fake_pool.close = mocker.AsyncMock(side_effect=Exception("boom"))
     error_mock = mocker.patch("src.db.connection.logger.error")
 
-    with pytest.raises(Exception):
-        await connection.close_postgres(application=mocker.Mock())
+    with pytest.raises(expected_exception=Exception, match=r"boom"):
+        await connection.close_postgres(mocker.Mock())
 
     error_mock.assert_called_once()
     assert (
@@ -157,7 +158,7 @@ async def test_close_postgres_logs_when_conn_pool_uninitialized(mocker):
     connection._conn_pool = None
     warning_mock = mocker.patch("src.db.connection.logger.warning")
 
-    await connection.close_postgres(application=mocker.Mock())
+    await connection.close_postgres(mocker.Mock())
 
     warning_mock.assert_called_once()
 

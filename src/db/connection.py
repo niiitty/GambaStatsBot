@@ -2,16 +2,13 @@
 
 import asyncpg
 from loguru import logger
-from typing import Optional
-
-from telegram.ext import Application
 
 from src.config import Config
 
-_conn_pool: Optional[asyncpg.Pool] = None
+_conn_pool: asyncpg.Pool | None = None
 
 
-async def init_postgres(application: Application) -> None:
+async def init_postgres(_) -> None:
     global _conn_pool
     try:
         logger.info("Initializing PostgreSQL connection pool...")
@@ -55,7 +52,7 @@ async def get_postgres() -> asyncpg.Pool:
     return _conn_pool
 
 
-async def close_postgres(application: Application) -> None:
+async def close_postgres(_) -> None:
     global _conn_pool
     if _conn_pool:
         try:
@@ -72,20 +69,17 @@ async def close_postgres(application: Application) -> None:
 
 async def execute(sql: str, *args):
     db_pool = await get_postgres()
-    async with db_pool.acquire() as conn:
-        async with conn.transaction():
-            return await conn.execute(sql, *args)
+    async with db_pool.acquire() as conn, conn.transaction():
+        return await conn.execute(sql, *args)
 
 
 async def insert(sql: str, *args) -> asyncpg.Record | None:
     db_pool = await get_postgres()
-    async with db_pool.acquire() as conn:
-        async with conn.transaction():
-            return await conn.fetchrow(sql, *args)
+    async with db_pool.acquire() as conn, conn.transaction():
+        return await conn.fetchrow(sql, *args)
 
 
 async def query(sql: str, *args) -> asyncpg.Record | None:
     db_pool = await get_postgres()
-    async with db_pool.acquire() as conn:
-        async with conn.transaction():
-            return await conn.fetchrow(sql, *args)
+    async with db_pool.acquire() as conn, conn.transaction():
+        return await conn.fetchrow(sql, *args)

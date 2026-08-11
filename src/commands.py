@@ -2,20 +2,19 @@
 
 from loguru import logger
 from telegram import Update
-from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 
 from src.db import add_user, get_stats
 from src.messages import (
-    HELP_MESSAGE,
-    BEGIN_TRACKING,
     ALREADY_TRACKING,
-    stats_message,
+    BEGIN_TRACKING,
+    HELP_MESSAGE,
     NO_STATS_YET,
+    stats_message,
 )
 
 
-async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help(update: Update, _) -> None:
     message = update.effective_message
     if message is None:
         logger.warning("Message missing for help, ignoring.")
@@ -27,7 +26,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-async def begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def begin(update: Update, _) -> None:
     message = update.effective_message
     user = update.effective_user
     chat = update.effective_chat
@@ -45,7 +44,7 @@ async def begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await message.reply_text(text=ALREADY_TRACKING, parse_mode=ParseMode.HTML)
 
 
-async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def stats(update: Update, _) -> None:
     message = update.effective_message
     user = update.effective_user
     chat = update.effective_chat
