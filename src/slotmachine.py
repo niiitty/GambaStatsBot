@@ -4,9 +4,7 @@ from dataclasses import dataclass
 
 from loguru import logger
 from telegram import Update
-from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
-
 
 from src.db import add_loss, add_win
 from src.messages import loss_streak_message
@@ -25,7 +23,7 @@ class SpinResult:
     message: str | None = None
 
 
-async def check_spin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def check_spin(update: Update, _) -> None:
     message = update.effective_message
     user = update.effective_user
     chat = update.effective_chat

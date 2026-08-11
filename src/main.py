@@ -1,17 +1,16 @@
 import logging
 
 from telegram.ext import (
-    filters,
     ApplicationBuilder,
-    MessageHandler,
     CommandHandler,
+    MessageHandler,
+    filters,
 )
 
+from src.commands import begin, help, stats
 from src.config import Config
-from src.db import init_postgres, close_postgres
+from src.db import close_postgres, init_postgres
 from src.slotmachine import check_spin
-from src.commands import help, begin, stats
-
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

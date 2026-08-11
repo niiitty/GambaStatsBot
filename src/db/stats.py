@@ -1,6 +1,6 @@
 from asyncpg import Record
 
-from .connection import query, insert, execute
+from .connection import execute, insert, query
 
 
 async def add_user(user_id: int, chat_id: int) -> bool:

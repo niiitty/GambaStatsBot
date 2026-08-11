@@ -162,11 +162,11 @@ async def test_handle_loss_with_message(mocker):
     mock_record = mocker.MagicMock()
     mock_record.__getitem__.return_value = True
 
-    LOSS_MESSAGE = "loss message"
+    loss_message = "loss message"
     mock_loss_message = mocker.patch(
         "src.slotmachine.loss_streak_message",
         new_callable=mocker.Mock,
-        return_value=LOSS_MESSAGE,
+        return_value=loss_message,
     )
 
     mock_add_loss = mocker.patch(
@@ -181,7 +181,7 @@ async def test_handle_loss_with_message(mocker):
     mock_add_loss.assert_called_once()
     mock_loss_message.assert_called_once()
 
-    assert result == slotmachine.SpinResult(won=False, message=LOSS_MESSAGE)
+    assert result == slotmachine.SpinResult(won=False, message=loss_message)
 
 
 @pytest.mark.asyncio
