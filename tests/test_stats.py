@@ -47,19 +47,19 @@ async def test_add_loss_executes_update_statement(mocker):
 
 @pytest.mark.asyncio
 async def test_get_stats_queries_stats_for_user_and_chat(mocker):
-    query_result = [(7, 8)]
-    query_mock = mocker.patch(
-        "src.db.stats.query",
+    insert_result = [(7, 8)]
+    insert_mock = mocker.patch(
+        "src.db.stats.insert",
         new_callable=mocker.AsyncMock,
-        return_value=query_result,
+        return_value=insert_result,
     )
 
     result = await stats.get_stats(9, 10)
 
-    assert result == query_result
-    query_mock.assert_awaited_once()
-    sql = query_mock.call_args.args[0]
+    assert result == insert_result
+    insert_mock.assert_awaited_once()
+    sql = insert_mock.call_args.args[0]
     assert "SELECT wins, losses" in sql
     assert "FROM stats" in sql
     assert "WHERE user_id = $1 AND chat_id = $2" in sql
-    assert query_mock.call_args.args[1:] == (9, 10)
+    assert insert_mock.call_args.args[1:] == (9, 10)

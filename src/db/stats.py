@@ -75,5 +75,5 @@ async def get_stats(user_id: int, chat_id: int) -> Record | None:
         WHERE user_id = $1 AND chat_id = $2
     """
 
-    stats = await query(sql, user_id, chat_id)
+    stats = await insert(sql, user_id, chat_id)
     return stats if stats else None
