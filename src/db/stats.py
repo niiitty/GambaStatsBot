@@ -77,3 +77,20 @@ async def get_stats(user_id: int, chat_id: int) -> Record | None:
 
     stats = await insert(sql, user_id, chat_id)
     return stats if stats else None
+
+
+async def get_chat_stats(chat_id: int) -> list[Record]:
+    """Get statistics for all users in a chat.
+
+    Returns:
+        `Record` containing:
+        - `wins` (int)
+        - `losses` (int)
+    """
+    sql = """
+        SELECT wins, losses
+        FROM STATS
+        WHERE chat_id = $1
+    """
+
+    return await query(sql, chat_id)

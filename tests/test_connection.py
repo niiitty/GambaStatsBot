@@ -202,11 +202,11 @@ async def test_query(mocker, fake_pool, fake_conn):
         new_callable=mocker.AsyncMock,
         return_value=fake_pool,
     )
-    fake_conn.fetchrow = mocker.AsyncMock(return_value=(7, 8))
+    fake_conn.fetch = mocker.AsyncMock(return_value=(7, 8))
 
     result = await connection.query("SELECT wins, losses FROM stats", 3, 4)
 
     get_postgres_mock.assert_awaited_once()
     fake_pool.acquire.assert_called_once()
-    fake_conn.fetchrow.assert_awaited_once_with("SELECT wins, losses FROM stats", 3, 4)
+    fake_conn.fetch.assert_awaited_once_with("SELECT wins, losses FROM stats", 3, 4)
     assert result == (7, 8)

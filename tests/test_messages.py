@@ -1,3 +1,5 @@
+import pytest
+
 import src.messages as messages
 
 
@@ -24,3 +26,21 @@ def test_stats_message_formats_properly():
     )
 
     assert message == expected
+
+
+def test_score_returns_correct_value():
+    wins = 1
+    losses = 2
+
+    score = messages.score(wins=wins, losses=losses)
+
+    assert score == pytest.approx(expected=0.018867924)
+
+
+def test_score_returns_zero_with_no_games():
+    wins = 0
+    losses = 0
+
+    score = messages.score(wins=wins, losses=losses)
+
+    assert score == 0.0

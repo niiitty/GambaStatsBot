@@ -55,3 +55,13 @@ def loss_streak_message(username: str, current_streak: int) -> str:
         username=escape(username),
         current_streak=current_streak,
     )
+
+
+def score(wins: int, losses: int) -> float:
+    total = wins + losses
+    if total <= 0:
+        return 0.0
+
+    winrate = wins / total
+    confidence = total / (total + 50)
+    return winrate * confidence

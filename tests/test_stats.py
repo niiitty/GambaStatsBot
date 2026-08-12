@@ -63,3 +63,14 @@ async def test_get_stats_queries_stats_for_user_and_chat(mocker):
     assert "FROM stats" in sql
     assert "WHERE user_id = $1 AND chat_id = $2" in sql
     assert insert_mock.call_args.args[1:] == (9, 10)
+
+
+@pytest.mark.asyncio
+async def test_get_chat_stats_returns_every_user(mocker):
+    query_result = []
+    query_mock = mocker.patch(
+        "src.db.stats.query", new_callable=mocker.AsyncMock, return_value=query_result
+    )
+
+    await stats.get_chat_stats(chat_id=123)
+    query_mock.assert_called_once()

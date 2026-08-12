@@ -4,7 +4,7 @@ from loguru import logger
 from telegram import Update
 from telegram.constants import ParseMode
 
-from src.db import add_user, get_stats
+from src.db import add_user, get_chat_stats, get_stats
 from src.messages import (
     ALREADY_TRACKING,
     BEGIN_TRACKING,
@@ -76,3 +76,14 @@ async def stats(update: Update, _) -> None:
             text=NO_STATS_YET,
             parse_mode=ParseMode.HTML,
         )
+
+
+async def leaderboard(update: Update, _) -> None:
+    message = update.effective_message
+    chat = update.effective_chat
+    if message is None or chat is None:
+        logger.warning("Message, user, or chat missing for stats, ignoring.")
+        return
+
+    stats = get_chat_stats(chat_id=chat.id)
+    print(stats)
