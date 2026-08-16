@@ -48,11 +48,11 @@ def test_score_returns_zero_with_no_games():
 
 def test_leaderboard_message_formats_correctly():
     expected = """
-🎰 test_chat pistetaulukko:
+🎰 test_chat top 10:
 
-1. user1 - 2.0
-2. user2 - 1.0
-3. user3 - 0.0
+1. user1
+2. user2
+3. user3
     """
 
     stat_list: list[tuple[str, float]] = [

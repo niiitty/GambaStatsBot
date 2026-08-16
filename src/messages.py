@@ -30,7 +30,7 @@ LOSS_STREAK_TEMPLATE = (
 )
 
 LEADERBOARD_TEMPLATE = """
-🎰 {chat_title} pistetaulukko:
+🎰 {chat_title} top 10:
 
 {stat_list}
     """
@@ -76,8 +76,7 @@ def score(wins: int, losses: int) -> float:
 def create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
     leaderboard: list[str] = []
     for pos, stat in enumerate(iterable=stat_list, start=1):
-        user, points = stat
-        leaderboard.append(f"{pos}. {escape(user)} - {points}")
+        leaderboard.append(f"{pos}. {escape(stat[0])}")
 
     return "\n".join(leaderboard)
 
