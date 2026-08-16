@@ -1,5 +1,6 @@
 """Command handler callback functions."""
 
+from asyncpg import Record
 from loguru import logger
 from telegram import Update
 from telegram.constants import ParseMode
@@ -10,6 +11,8 @@ from src.messages import (
     BEGIN_TRACKING,
     HELP_MESSAGE,
     NO_STATS_YET,
+    leaderboard_message,
+    score,
     stats_message,
 )
 
@@ -81,9 +84,27 @@ async def stats(update: Update, _) -> None:
 async def leaderboard(update: Update, _) -> None:
     message = update.effective_message
     chat = update.effective_chat
-    if message is None or chat is None:
+    if message is None or chat is None or chat.title is None:
         logger.warning("Message, user, or chat missing for stats, ignoring.")
         return
 
-    stats = get_chat_stats(chat_id=chat.id)
-    print(stats)
+    stats: list[Record] = await get_chat_stats(chat_id=chat.id)
+    stat_list: list[tuple[int, float]] = [
+        (record["user_id"], score(wins=record["wins"], losses=record["losses"]))
+        for record in stats
+    ]
+    stat_list.sort(key=lambda x: x[1], reverse=True)
+    usernames: list[tuple[str, float]] = []
+    for user in stat_list:
+        member = await chat.get_member(user_id=user[0])
+        username = (
+            member.user.username
+            if member.user.username is not None
+            else member.user.first_name
+        )
+        usernames.append((username, user[1]))
+
+    await message.reply_text(
+        text=leaderboard_message(chat_title=chat.title, stat_list=usernames),
+        parse_mode=ParseMode.HTML,
+    )

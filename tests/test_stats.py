@@ -67,10 +67,23 @@ async def test_get_stats_queries_stats_for_user_and_chat(mocker):
 
 @pytest.mark.asyncio
 async def test_get_chat_stats_returns_every_user(mocker):
-    query_result = []
+    query_result = [mocker.MagicMock(), mocker.MagicMock()]
     query_mock = mocker.patch(
         "src.db.stats.query", new_callable=mocker.AsyncMock, return_value=query_result
     )
 
-    await stats.get_chat_stats(chat_id=123)
+    result = await stats.get_chat_stats(chat_id=123)
     query_mock.assert_called_once()
+    assert len(result) == 2
+
+
+@pytest.mark.asyncio
+async def test_get_chat_longest_streaks_returns_every_user(mocker):
+    query_result = [mocker.MagicMock(), mocker.MagicMock()]
+    query_mock = mocker.patch(
+        "src.db.stats.query", new_callable=mocker.AsyncMock, return_value=query_result
+    )
+
+    result = await stats.get_chat_stats(chat_id=123)
+    query_mock.assert_called_once()
+    assert len(result) == 2

@@ -84,12 +84,13 @@ async def get_chat_stats(chat_id: int) -> list[Record]:
 
     Returns:
         `Record` containing:
+        - `user_id` (int)
         - `wins` (int)
         - `losses` (int)
     """
     sql = """
-        SELECT wins, losses
-        FROM STATS
+        SELECT user_id, wins, losses
+        FROM stats
         WHERE chat_id = $1
     """
 

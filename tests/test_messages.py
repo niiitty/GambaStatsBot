@@ -44,3 +44,23 @@ def test_score_returns_zero_with_no_games():
     score = messages.score(wins=wins, losses=losses)
 
     assert score == 0.0
+
+
+def test_leaderboard_message_formats_correctly():
+    expected = """
+🎰 test_chat pistetaulukko:
+
+1. user1 - 2.0
+2. user2 - 1.0
+3. user3 - 0.0
+    """
+
+    stat_list: list[tuple[str, float]] = [
+        ("user1", 2.0),
+        ("user2", 1.0),
+        ("user3", 0.0),
+    ]
+
+    assert expected == messages.leaderboard_message(
+        chat_title="test_chat", stat_list=stat_list
+    )

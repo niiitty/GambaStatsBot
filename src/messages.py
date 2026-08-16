@@ -29,6 +29,12 @@ LOSS_STREAK_TEMPLATE = (
     "🎰 <i><b>{username}</b> on {current_streak} pelin häviöputkessa</i> 📉"
 )
 
+LEADERBOARD_TEMPLATE = """
+🎰 {chat_title} pistetaulukko:
+
+{stat_list}
+    """
+
 
 def stats_message(
     username: str, chat_title: str, wins: int, losses: int, longest_streak: int
@@ -65,3 +71,19 @@ def score(wins: int, losses: int) -> float:
     winrate = wins / total
     confidence = total / (total + 50)
     return winrate * confidence
+
+
+def create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
+    leaderboard: list[str] = []
+    for pos, stat in enumerate(iterable=stat_list, start=1):
+        user, points = stat
+        leaderboard.append(f"{pos}. {escape(user)} - {points}")
+
+    return "\n".join(leaderboard)
+
+
+def leaderboard_message(chat_title: str, stat_list: list[tuple[str, float]]) -> str:
+    return LEADERBOARD_TEMPLATE.format(
+        chat_title=chat_title,
+        stat_list=create_leaderboard(stat_list),
+    )
