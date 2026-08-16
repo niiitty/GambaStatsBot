@@ -48,7 +48,6 @@ typing = [
 
 [tool.ruff]
 line-length = 88
-target-version = "py311"  # match your actual version
 
 [tool.ruff.lint]
 select = [

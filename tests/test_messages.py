@@ -1,3 +1,5 @@
+import pytest
+
 import src.messages as messages
 
 
@@ -24,3 +26,41 @@ def test_stats_message_formats_properly():
     )
 
     assert message == expected
+
+
+def test_score_returns_correct_value():
+    wins = 1
+    losses = 2
+
+    score = messages.score(wins=wins, losses=losses)
+
+    assert score == pytest.approx(expected=0.018867924)
+
+
+def test_score_returns_zero_with_no_games():
+    wins = 0
+    losses = 0
+
+    score = messages.score(wins=wins, losses=losses)
+
+    assert score == 0.0
+
+
+def test_leaderboard_message_formats_correctly():
+    expected = """
+🎰 test_chat top 10:
+
+1. user1
+2. user2
+3. user3
+    """
+
+    stat_list: list[tuple[str, float]] = [
+        ("user1", 2.0),
+        ("user2", 1.0),
+        ("user3", 0.0),
+    ]
+
+    assert expected == messages.leaderboard_message(
+        chat_title="test_chat", stat_list=stat_list
+    )

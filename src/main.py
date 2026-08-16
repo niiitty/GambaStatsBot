@@ -7,7 +7,7 @@ from telegram.ext import (
     filters,
 )
 
-from src.commands import begin, help, stats
+from src.commands import begin, help, leaderboard, stats
 from src.config import Config
 from src.db import close_postgres, init_postgres
 from src.slotmachine import check_spin
@@ -36,6 +36,7 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help))
     application.add_handler(CommandHandler("begin", begin))
     application.add_handler(CommandHandler("stats", stats))
+    application.add_handler(CommandHandler("leaderboard", leaderboard))
 
     application.run_polling()
 
