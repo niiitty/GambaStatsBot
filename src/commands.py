@@ -2,7 +2,7 @@
 
 from asyncpg import Record
 from loguru import logger
-from telegram import Update
+from telegram import Chat, Update
 from telegram.constants import ParseMode
 
 from src.db import add_user, get_chat_stats, get_stats
@@ -81,6 +81,22 @@ async def stats(update: Update, _) -> None:
         )
 
 
+async def _get_usernames(
+    chat: Chat, stats: list[tuple[int, float]]
+) -> list[tuple[str, float]]:
+    usernames = []
+    for user in stats:
+        member = await chat.get_member(user_id=user[0])
+        username = (
+            member.user.username
+            if member.user.username is not None
+            else member.user.first_name
+        )
+        usernames.append((username, user[1]))
+
+    return usernames
+
+
 async def leaderboard(update: Update, _) -> None:
     message = update.effective_message
     chat = update.effective_chat
@@ -94,15 +110,7 @@ async def leaderboard(update: Update, _) -> None:
         for record in stats
     ]
     stat_list.sort(key=lambda x: x[1], reverse=True)
-    usernames: list[tuple[str, float]] = []
-    for user in stat_list:
-        member = await chat.get_member(user_id=user[0])
-        username = (
-            member.user.username
-            if member.user.username is not None
-            else member.user.first_name
-        )
-        usernames.append((username, user[1]))
+    usernames = await _get_usernames(chat=chat, stats=stat_list[0:10])
 
     await message.reply_text(
         text=leaderboard_message(chat_title=chat.title, stat_list=usernames),
