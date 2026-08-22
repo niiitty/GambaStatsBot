@@ -33,6 +33,12 @@ def test_leaderboard_message_formats_correctly():
 1. user1
 2. user2
 3. user3
+
+Pisimmät häviöputket 📉
+
+1. user2 - 15
+2. user1 - 5
+3. user3 - 0
     """
 
     stat_list: list[tuple[str, float]] = [
@@ -41,6 +47,8 @@ def test_leaderboard_message_formats_correctly():
         ("user3", 0.0),
     ]
 
+    longest_streaks: list[tuple[str, int]] = [("user2", 15), ("user1", 5), ("user3", 0)]
+
     assert expected == messages.leaderboard_message(
-        chat_title="test_chat", stat_list=stat_list
+        chat_title="test_chat", stat_list=stat_list, longest_streaks=longest_streaks
     )

@@ -95,3 +95,22 @@ async def get_chat_stats(chat_id: int) -> list[Record]:
     """
 
     return await query(sql, chat_id)
+
+
+async def get_chat_longest_streaks(chat_id: int) -> list[Record]:
+    """Get top 10 longest losing streaks in a chat.
+
+    Returns:
+        `Record` containing:
+        - `user_id` (int): id of user.
+        - `longest_streak` (int): the greater of current_streak and longest_streak.
+    """
+    sql = """
+        SELECT user_id, GREATEST(current_streak, longest_streak) as longest_streak
+        FROM stats
+        WHERE chat_id = $1
+        ORDER BY longest_streak DESC
+        LIMIT 10
+    """
+
+    return await query(sql, chat_id)

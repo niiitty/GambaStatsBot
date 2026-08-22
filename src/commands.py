@@ -1,11 +1,13 @@
 """Command handler callback functions."""
 
+from collections.abc import Sequence
+
 from asyncpg import Record
 from loguru import logger
 from telegram import Chat, Update
 from telegram.constants import ParseMode
 
-from src.db import add_user, get_chat_stats, get_stats
+from src.db import add_user, get_chat_longest_streaks, get_chat_stats, get_stats
 from src.messages import (
     ALREADY_TRACKING,
     BEGIN_TRACKING,
@@ -90,9 +92,9 @@ def _score(wins: int, losses: int) -> float:
     return winrate * confidence
 
 
-async def _get_usernames(
-    chat: Chat, stats: list[tuple[int, float]]
-) -> list[tuple[str, float]]:
+async def _get_usernames[T: (int, float)](
+    chat: Chat, stats: Sequence[tuple[int, T]]
+) -> list[tuple[str, T]]:
     usernames = []
     for user in stats:
         member = await chat.get_member(user_id=user[0])
@@ -119,9 +121,22 @@ async def leaderboard(update: Update, _) -> None:
         for record in stats
     ]
     stat_list.sort(key=lambda x: x[1], reverse=True)
-    usernames = await _get_usernames(chat=chat, stats=stat_list[0:10])
+
+    stat_usernames = await _get_usernames(chat=chat, stats=stat_list[0:10])
+
+    longest_streaks: list[Record] = await get_chat_longest_streaks(chat_id=chat.id)
+    longest_streaks_list: list[tuple[int, int]] = [
+        (record["user_id"], record["longest_streak"]) for record in longest_streaks
+    ]
+    longest_streaks_list.sort(key=lambda x: x[1], reverse=True)
+
+    streak_usernames = await _get_usernames(chat=chat, stats=longest_streaks_list[0:10])
 
     await message.reply_text(
-        text=leaderboard_message(chat_title=chat.title, stat_list=usernames),
+        text=leaderboard_message(
+            chat_title=chat.title,
+            stat_list=stat_usernames,
+            longest_streaks=streak_usernames,
+        ),
         parse_mode=ParseMode.HTML,
     )

@@ -34,6 +34,10 @@ LEADERBOARD_TEMPLATE = """
 🎰 {chat_title} top 10:
 
 {stat_list}
+
+Pisimmät häviöputket 📉
+
+{streak_list}
     """
 
 
@@ -64,7 +68,7 @@ def loss_streak_message(username: str, current_streak: int) -> str:
     )
 
 
-def _create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
+def _create_score_leaderboard(stat_list: list[tuple[str, float]]) -> str:
     leaderboard: list[str] = []
     for pos, stat in enumerate(iterable=stat_list, start=1):
         leaderboard.append(f"{pos}. {escape(stat[0])}")
@@ -72,8 +76,21 @@ def _create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
     return "\n".join(leaderboard)
 
 
-def leaderboard_message(chat_title: str, stat_list: list[tuple[str, float]]) -> str:
+def _create_streak_leaderboard(streak_list: list[tuple[str, int]]) -> str:
+    leaderboard: list[str] = []
+    for pos, stat in enumerate(iterable=streak_list, start=1):
+        leaderboard.append(f"{pos}. {escape(stat[0])} - {stat[1]}")
+
+    return "\n".join(leaderboard)
+
+
+def leaderboard_message(
+    chat_title: str,
+    stat_list: list[tuple[str, float]],
+    longest_streaks: list[tuple[str, int]],
+) -> str:
     return LEADERBOARD_TEMPLATE.format(
         chat_title=chat_title,
-        stat_list=_create_leaderboard(stat_list),
+        stat_list=_create_score_leaderboard(stat_list),
+        streak_list=_create_streak_leaderboard(longest_streaks),
     )
