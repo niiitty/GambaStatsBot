@@ -30,6 +30,7 @@ uv run up
 
 /begin - Start tracking wins/losses.
 /stats - Print statistics.
+/leaderboard - Print top 10.
 ```
 
 ## License

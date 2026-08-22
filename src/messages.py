@@ -7,6 +7,7 @@ HELP_MESSAGE = """
 
 /begin - Ala seuraamaan voittoja ja häviöitä.
 /stats - Tulosta tilastosi.
+/leaderboard - Tulosta top 10.
 """
 
 BEGIN_TRACKING = "🎰 <i>Gamba gamba</i>"
