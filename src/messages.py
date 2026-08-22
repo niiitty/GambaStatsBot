@@ -64,17 +64,7 @@ def loss_streak_message(username: str, current_streak: int) -> str:
     )
 
 
-def score(wins: int, losses: int) -> float:
-    total = wins + losses
-    if total <= 0:
-        return 0.0
-
-    winrate = wins / total
-    confidence = total / (total + 50)
-    return winrate * confidence
-
-
-def create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
+def _create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
     leaderboard: list[str] = []
     for pos, stat in enumerate(iterable=stat_list, start=1):
         leaderboard.append(f"{pos}. {escape(stat[0])}")
@@ -85,5 +75,5 @@ def create_leaderboard(stat_list: list[tuple[str, float]]) -> str:
 def leaderboard_message(chat_title: str, stat_list: list[tuple[str, float]]) -> str:
     return LEADERBOARD_TEMPLATE.format(
         chat_title=chat_title,
-        stat_list=create_leaderboard(stat_list),
+        stat_list=_create_leaderboard(stat_list),
     )

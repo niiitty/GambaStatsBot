@@ -12,7 +12,6 @@ from src.messages import (
     HELP_MESSAGE,
     NO_STATS_YET,
     leaderboard_message,
-    score,
     stats_message,
 )
 
@@ -81,6 +80,16 @@ async def stats(update: Update, _) -> None:
         )
 
 
+def _score(wins: int, losses: int) -> float:
+    total = wins + losses
+    if total <= 0:
+        return 0.0
+
+    winrate = wins / total
+    confidence = total / (total + 50)
+    return winrate * confidence
+
+
 async def _get_usernames(
     chat: Chat, stats: list[tuple[int, float]]
 ) -> list[tuple[str, float]]:
@@ -106,7 +115,7 @@ async def leaderboard(update: Update, _) -> None:
 
     stats: list[Record] = await get_chat_stats(chat_id=chat.id)
     stat_list: list[tuple[int, float]] = [
-        (record["user_id"], score(wins=record["wins"], losses=record["losses"]))
+        (record["user_id"], _score(wins=record["wins"], losses=record["losses"]))
         for record in stats
     ]
     stat_list.sort(key=lambda x: x[1], reverse=True)
